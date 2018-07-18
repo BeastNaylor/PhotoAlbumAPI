@@ -12,7 +12,7 @@ namespace PhotoAlbumAPI.Models
     {
         public async Task<JArray> CallExternalAPI(string uri)
         {
-            JArray results;
+            JArray results = null;
             //call external API and return results
             using (var httpClient = new HttpClient())
             {

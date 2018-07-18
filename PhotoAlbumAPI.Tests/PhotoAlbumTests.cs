@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PhotoAlbumAPI.Controllers;
 using PhotoAlbumAPI.Models;
 
 namespace PhotoAlbumAPI.Tests
@@ -9,28 +11,37 @@ namespace PhotoAlbumAPI.Tests
     [TestClass]
     public class PhotoAlbumTests
     {
+        PhotoAlbumController _controller;
+
+        [TestInitialize]
+        public void Init()
+        {
+            IExternalDataCall fakeCaller = new FakeDataCaller();
+            _controller = new PhotoAlbumController(fakeCaller);
+
+        }
+
         [TestMethod]
         public void TestGetAllPhotoAlbums()
         {
-            var controller = new Controllers.PhotoAlbumController();
-            ICollection<Album> albums = controller.GetAllPhotoAlbums().Result;
-            Assert.AreEqual(albums.Count, 10);
+            ICollection<Album> albums = _controller.GetAllPhotoAlbums().Result;
+            Assert.AreEqual(4, albums.Count);
         }
 
         [TestMethod]
         public void TestGetPhotoAlbumsForUser()
         {
-            var controller = new Controllers.PhotoAlbumController();
-            var albums = controller.GetPhotoAlbumsForUser(5).Result as OkNegotiatedContentResult<ICollection<Album>>; ;
-            Assert.AreEqual(albums.Content.Count, 2);
+            var albums = _controller.GetPhotoAlbumsForUser(2).Result;
+            var photos = albums.SelectMany(a => a.photos).ToList();
+            Assert.AreEqual(2, albums.Count);
+            Assert.AreEqual(4, photos.Count);
         }
 
         [TestMethod]
         public void TestGetPhotoAlbumsForBadUser()
         {
-            var controller = new Controllers.PhotoAlbumController();
-            var result = controller.GetPhotoAlbumsForUser(-1);
-            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+            var result = _controller.GetPhotoAlbumsForUser(-1).Result;
+            Assert.AreEqual(0, result.Count);
         }
     }
 }

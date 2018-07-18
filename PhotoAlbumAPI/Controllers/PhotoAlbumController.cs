@@ -37,9 +37,15 @@ namespace PhotoAlbumAPI.Controllers
 
         private async Task<ICollection<Album>> GetAllCombinedAlbums()
         {
-            var result = await _caller.CallExternalAPI("http://jsonplaceholder.typicode.com/albums");
-            var albums = result.ToObject<ICollection<Album>>();
-            return null;
+            var albums = (await _caller.CallExternalAPI("http://jsonplaceholder.typicode.com/albums")).ToObject<ICollection<Album>>();
+            var photos = (await _caller.CallExternalAPI("http://jsonplaceholder.typicode.com/photos")).ToObject<ICollection<Photo>>();
+            //now we have both album and photos, need to set the photo property of the album to the relevant list of photos
+            foreach (Album album in albums)
+            {
+                album.photos = photos.Where(photo => photo.albumId == album.id).ToList();
+            }
+            return albums;
+
         }
     }
 }

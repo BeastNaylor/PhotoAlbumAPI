@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PhotoAlbumAPI.Tests
@@ -7,7 +8,7 @@ namespace PhotoAlbumAPI.Tests
     public class ExternalAPICallerTests
     {
         [TestMethod]
-        public async void CallValidAPIAsync()
+        public async Task TestCallValidAPIAsync()
         {
             var caller = new Models.ExternalAPICaller();
             var result = await caller.CallExternalAPI("http://jsonplaceholder.typicode.com/users");
