@@ -33,14 +33,14 @@
     });
 
     function formatItem(item) {
-      return item;
+        return item.title + ' has ' + item.photos.length + ' photos';
     }
 
     function find() {
       var id = $('#userId').val();
       $.getJSON(uri + '/' + id)
           .done(function (data) {
-              $('#album').text(formatItem(data));
+              $('#album').text(data.length + ' albums found.');
           })
           .fail(function (jqXHR, textStatus, err) {
               $('#album').text('Error: ' + err);
