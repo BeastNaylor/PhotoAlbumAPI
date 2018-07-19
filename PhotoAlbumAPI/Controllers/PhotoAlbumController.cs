@@ -13,11 +13,6 @@ namespace PhotoAlbumAPI.Controllers
     {
         IExternalDataCall _caller;
 
-        public PhotoAlbumController()
-        {
-            _caller = new ExternalAPICaller();
-        }
-
         public PhotoAlbumController(IExternalDataCall caller)
         {
             _caller = caller;
